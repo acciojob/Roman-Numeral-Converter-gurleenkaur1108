@@ -1,41 +1,37 @@
 function convertToRoman(num) {
-  const obj = {
-    0: ['M', 1000],
-    1: ['D', 500],
-    2: ['C', 100],
-    3: ['L', 50],
-    4: ['X', 10],
-    5: ['V', 5],
-    6: ['I', 1]
-  };
+    const obj = {
+        0: ['M', 1000],
+        1: ['D', 500],
+        2: ['C', 100],
+        3: ['L', 50],
+        4: ['X', 10],
+        5: ['V', 5],
+        6: ['I', 1]
+    };
 
-  let result = '';
+    let roman = '';
+    for (let i = 0; i < Object.keys(obj).length; i++) {
+        // Handle special cases like 900 (CM), 400 (CD), 90 (XC), 40 (XL), 9 (IX), and 4 (IV)
+        if (i % 2 === 0 && i < 6 && num >= obj[i][1] - obj[i + 2][1]) {
+            roman += obj[i + 2][0] + obj[i][0];
+            num -= obj[i][1] - obj[i + 2][1];
+        } else if (i % 2 === 1 && num >= obj[i][1] - obj[i + 1][1]) {
+            roman += obj[i + 1][0] + obj[i][0];
+            num -= obj[i][1] - obj[i + 1][1];
+        }
 
-  for (let i = 0; i < 7; i += 2) {
-    const [symbol1, value1] = obj[i];
-    const [symbol2, value2] = obj[i - 1];
-    const [symbol3, value3] = obj[i - 2];
-
-    const quotient = Math.floor(num / value1);
-    num %= value1;
-
-    if (quotient === 9) {
-      result += symbol3 + symbol1; // Subtractive notation (e.g., CM for 900)
-    } else if (quotient >= 5) {
-      result += symbol2;
-      result += symbol1.repeat(quotient - 5);
-    } else if (quotient === 4) {
-      result += symbol3 + symbol2; // Subtractive notation (e.g., IV for 4)
-    } else {
-      result += symbol1.repeat(quotient);
+        // Handle regular cases
+        while (num >= obj[i][1]) {
+            roman += obj[i][0];
+            num -= obj[i][1];
+        }
     }
-  }
 
-  return result;
+    return roman;
 }
 
-// Testing the function with input 36
-console.log(convertToRoman(36));
+// Uncomment to test the function with input 36
+// console.log(convertToRoman(36));
 
+// do not edit below this line
 module.exports = convertToRoman;
-
